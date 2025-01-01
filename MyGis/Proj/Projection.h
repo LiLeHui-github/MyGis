@@ -15,7 +15,7 @@ public:
     virtual QRectF getExtent() const = 0;
 
     // 更新变换矩阵
-    virtual void updateMatrix() {};
+    virtual void updateMatrix(const MapSettings& settings) {};
 
     // 将像素坐标转换到投影坐标
     virtual QPointF toProjection(const MapSettings& settings, const QPointF &pixel) const = 0;

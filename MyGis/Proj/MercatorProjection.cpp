@@ -14,6 +14,18 @@ QRectF MercatorProjection::getExtent() const
     return m_extent;
 }
 
+void MercatorProjection::updateMatrix(const MapSettings& settings)
+{
+    const QPointF& viewExtentCenter = settings.m_viewExtent.center();
+    const QPointF& mapViewpoint = settings.m_mapViewPoint;
+    double resolution = settings.m_resolution;
+
+    m_matrix = QTransform()
+        .translate(-viewExtentCenter.x(), -viewExtentCenter.y())
+        .scale(resolution, -resolution)
+        .translate(mapViewpoint.x(), mapViewpoint.y());
+}
+
 QPointF MercatorProjection::toProjection(const MapSettings& settings, const QPointF& pixel) const
 {  
     // 将像素坐标转换到墨卡托投影坐标
