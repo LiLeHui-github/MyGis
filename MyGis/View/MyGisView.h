@@ -22,11 +22,19 @@ public:
 
     Map* getMap() const;
 
-    void refresh();
+    void setZoom(int zoom);
 
     void setCenterForView(const QPointF& pixel);
 
     void setCenterForProjection(const QPointF& projection);
+
+    int getZoom() const;
+
+    double getResolution() const;
+
+    QPointF getMapViewpoint() const;
+
+    void refresh();
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;
@@ -43,8 +51,6 @@ private:
     double resolutionConstraint(double resolution) const;
 
     void setResolution(double resolution);
-
-    void setZoom(int zoom);
 
     void setViewExtent(const QRectF& extent);
 
@@ -67,5 +73,6 @@ private:
 
     // 移动处理
     bool m_dragMap;
+    QPointF m_dragPos;
 
 };

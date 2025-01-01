@@ -69,11 +69,9 @@ Map* MyGisView::getMap() const
     return m_map.get();
 }
 
-void MyGisView::refresh()
+void MyGisView::setZoom(int zoom)
 {
-    spdlog::info("refresh() called.");
-    m_mapItem->stopRender();
-    m_refreshMapTimer->start(30);
+    setResolution(findResolutionForZoom(zoom));
 }
 
 void MyGisView::setCenterForView(const QPointF& pixel)
@@ -88,11 +86,34 @@ void MyGisView::setCenterForProjection(const QPointF& projection)
     refresh();
 }
 
+int MyGisView::getZoom() const
+{
+    return m_settings.m_zoom;
+}
+
+double MyGisView::getResolution() const
+{
+    return m_settings.m_resolution;
+}
+
+QPointF MyGisView::getMapViewpoint() const
+{
+    return m_settings.m_mapViewPoint;
+}
+
+void MyGisView::refresh()
+{
+    //spdlog::info("refresh() called.");
+    m_mapItem->stopRender();
+    m_refreshMapTimer->start(1);
+}
+
 void MyGisView::mousePressEvent(QMouseEvent* event)
 {
     if(event->button() == Qt::RightButton)
     {
         m_dragMap = true;
+        m_dragPos = event->pos();
     }
 
 }
@@ -103,6 +124,17 @@ void MyGisView::mouseMoveEvent(QMouseEvent* event)
     //const QPointF& pt1 = m_proj->toProjection(p);
     //const QPointF& pt2 = m_proj->toPixel(pt1);
     //spdlog::info("inputPixel:({},{}), mapPoint:({},{}), pixelPoint:({},{})", p.x(), p.y(), pt1.x(), pt1.y(), pt2.x(), pt2.y());
+
+    if(m_dragMap)
+    {
+        const QPoint& current = event->pos();
+        const QPointF& offset = (m_dragPos - current) * getResolution();
+        m_dragPos = current;
+
+        // 移动视点
+        setCenterForProjection(getMapViewpoint() + offset);
+    }
+
 }
 
 void MyGisView::mouseReleaseEvent(QMouseEvent* event)
@@ -112,7 +144,7 @@ void MyGisView::mouseReleaseEvent(QMouseEvent* event)
 
 void MyGisView::wheelEvent(QWheelEvent* event)
 {
-    double currentResolution = m_settings.m_resolution;
+    double currentResolution = getResolution();
     int currentZoom = findZoomForResolution(currentResolution);
     double baseResolution = findResolutionForZoom(currentZoom);
     double newResolution = 0;
@@ -186,11 +218,6 @@ void MyGisView::setResolution(double resolution)
     refresh();
 }
 
-void MyGisView::setZoom(int zoom)
-{
-    setResolution(findResolutionForZoom(zoom));
-}
-
 void MyGisView::setViewExtent(const QRectF& extent)
 {
     m_settings.m_viewExtent = extent;
@@ -206,6 +233,6 @@ void MyGisView::updateProjectionMatrix()
 
 void MyGisView::refreshMap()
 {
-    spdlog::info("refreshMap() called.");
+    //spdlog::info("refreshMap() called.");
     m_mapItem->startRender(m_settings);
 }
