@@ -29,8 +29,8 @@ MyGisView::MyGisView(Map* map, QWidget* parent)
     system("chcp 65001");
 
     setMouseTracking(true);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     QGraphicsScene* scene = new QGraphicsScene();
     setScene(scene);
@@ -53,7 +53,9 @@ MyGisView::MyGisView(Map* map, QWidget* parent)
     setViewExtent(sceneRect());
     setCenterForProjection(QPointF{ 0, 0 });
 
-    auto t = m_proj->toProjection(m_settings, sceneRect().center());
+    auto center = sceneRect().center();
+    auto pt1 = m_proj->toProjection(center);
+    auto pt2 = m_proj->toPixel(pt1);
 
 }
 
@@ -75,7 +77,7 @@ void MyGisView::refresh()
 
 void MyGisView::setCenterForView(const QPointF& pixel)
 {
-    setCenterForProjection(m_proj->toProjection(m_settings, pixel));
+    setCenterForProjection(m_proj->toProjection(pixel));
 }
 
 void MyGisView::setCenterForProjection(const QPointF& projection)
@@ -91,8 +93,10 @@ void MyGisView::mousePressEvent(QMouseEvent* event)
 
 void MyGisView::mouseMoveEvent(QMouseEvent* event)
 {
-    const QPointF& pt = m_proj->toProjection(m_settings, event->screenPos());
-    spdlog::info("mouse map point: ({},{})", pt.x(), pt.y());
+    const QPoint& p = event->pos();
+    const QPointF& pt1 = m_proj->toProjection(p);
+    const QPointF& pt2 = m_proj->toPixel(pt1);
+    spdlog::info("inputPixel:({},{}), mapPoint:({},{}), pixelPoint:({},{})", p.x(), p.y(), pt1.x(), pt1.y(), pt2.x(), pt2.y());
 }
 
 void MyGisView::mouseReleaseEvent(QMouseEvent* event)
@@ -127,7 +131,7 @@ void MyGisView::wheelEvent(QWheelEvent* event)
 void MyGisView::resizeEvent(QResizeEvent* event)
 {
     QSizeF size = event->size();
-
+   
     scene()->setSceneRect(QRectF{ QPointF{0, 0}, size });
     m_mapItem->setItemSize(size);
     setViewExtent( sceneRect());

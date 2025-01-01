@@ -18,8 +18,8 @@ public:
     virtual void updateMatrix(const MapSettings& settings) {}
 
     // 将像素坐标转换到投影坐标
-    virtual QPointF toProjection(const MapSettings& settings, const QPointF &pixel) const = 0;
+    virtual QPointF toProjection(const QPointF &pixel) const = 0;
 
     // 将投影坐标转换到像素坐标
-    virtual QPointF toPixel(const MapSettings& settings, const QPointF &projection) const = 0;
+    virtual QPointF toPixel(const QPointF &projection) const = 0;
 };

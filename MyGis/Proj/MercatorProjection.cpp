@@ -22,25 +22,18 @@ void MercatorProjection::updateMatrix(const MapSettings& settings)
 
     m_matrix = QTransform()
         .translate(mapViewpoint.x(), mapViewpoint.y())
-        .scale(resolution, -resolution)
+        .scale(resolution, resolution)
         .translate(-viewExtentCenter.x(), -viewExtentCenter.y());
 }
 
-QPointF MercatorProjection::toProjection(const MapSettings& settings, const QPointF& pixel) const
+QPointF MercatorProjection::toProjection(const QPointF& pixel) const
 {
     // 将像素坐标转换到墨卡托投影坐标
-    const QPointF& offset = (pixel - settings.m_viewExtent.center()) * settings.m_resolution;
-    auto p1 = settings.m_mapViewPoint + QPointF(offset.x(), -offset.y());
-
     return m_matrix.map(pixel);
 }
 
-QPointF MercatorProjection::toPixel(const MapSettings& settings, const QPointF& projection) const
+QPointF MercatorProjection::toPixel(const QPointF& projection) const
 {
     // 将墨卡托投影坐标转换为像素坐标
-    double invertResolution = 1.0 / settings.m_resolution;
-    const QPointF& offset = (projection - settings.m_mapViewPoint) * invertResolution;
-    auto p1 = settings.m_viewExtent.center() + QPointF(offset.x(), -offset.y());
-
     return m_matrix.inverted().map(projection);
 }
