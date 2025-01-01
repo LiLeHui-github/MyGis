@@ -24,6 +24,7 @@ QPointF MercatorProjection::toProjection(const MapSettings& settings, const QPoi
 QPointF MercatorProjection::toPixel(const MapSettings& settings, const QPointF& projection) const
 {
     // 将墨卡托投影坐标转换为像素坐标
-    const QPointF& offset = (projection - settings.m_mapViewPoint) / settings.m_resolution;
+    double invertResolution = 1.0 / settings.m_resolution;
+    const QPointF& offset = (projection - settings.m_mapViewPoint) * invertResolution;
     return settings.m_viewExtent.center() + QPointF(offset.x(), -offset.y());
 }

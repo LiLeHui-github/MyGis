@@ -48,10 +48,6 @@ MyGisView::MyGisView(Map* map, QWidget* parent)
     initResolution(0, 21);
     setViewExtent(sceneRect());
     setCenterForProjection(QPointF{ 0, 0 });
-
-    auto r = m_proj->toPixel(m_settings, QPointF{ 0, 0 });
-
-
 }
 
 MyGisView::~MyGisView()
@@ -118,8 +114,6 @@ void MyGisView::wheelEvent(QWheelEvent* event)
         newResolution = resolutionConstraint(currentResolution + step);
     }
 
-    //QPoint p = event->position().toPoint();
-    //setCenterForView(mapToScene(p));
     setResolution(newResolution);
 }
 
@@ -183,7 +177,6 @@ void MyGisView::setViewExtent(const QRectF& extent)
     m_settings.m_viewExtent = extent;
     setZoom(findZoomForViewExtent(extent));
 }
-
 
 void MyGisView::refreshMap()
 {

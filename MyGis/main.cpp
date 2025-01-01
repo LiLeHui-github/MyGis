@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 
     MyGisView w;
     w.show();
-
+    w.resize(258, 258);
     w.getMap()->addLayer(new TmsLayer("E:/BaiduNetdiskDownload/GoogleMapTiles/%1/%2/%3.png"));
 
     return a.exec();
