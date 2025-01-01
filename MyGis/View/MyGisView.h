@@ -48,6 +48,8 @@ private:
 
     void setViewExtent(const QRectF& extent);
 
+    void updateProjectionMatrix();
+
     void refreshMap();
 
 private:

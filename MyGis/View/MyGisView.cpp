@@ -28,6 +28,10 @@ MyGisView::MyGisView(Map* map, QWidget* parent)
 {
     system("chcp 65001");
 
+    setMouseTracking(true);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     QGraphicsScene* scene = new QGraphicsScene();
     setScene(scene);
 
@@ -48,6 +52,9 @@ MyGisView::MyGisView(Map* map, QWidget* parent)
     initResolution(0, 21);
     setViewExtent(sceneRect());
     setCenterForProjection(QPointF{ 0, 0 });
+
+    auto t = m_proj->toProjection(m_settings, sceneRect().center());
+
 }
 
 MyGisView::~MyGisView()
@@ -74,22 +81,22 @@ void MyGisView::setCenterForView(const QPointF& pixel)
 void MyGisView::setCenterForProjection(const QPointF& projection)
 {
     m_settings.m_mapViewPoint = projection;
+    updateProjectionMatrix();
     refresh();
 }
 
 void MyGisView::mousePressEvent(QMouseEvent* event)
 {
-    QGraphicsView::mousePressEvent(event);
 }
 
 void MyGisView::mouseMoveEvent(QMouseEvent* event)
 {
-    QGraphicsView::mouseMoveEvent(event);
+    const QPointF& pt = m_proj->toProjection(m_settings, event->screenPos());
+    spdlog::info("mouse map point: ({},{})", pt.x(), pt.y());
 }
 
 void MyGisView::mouseReleaseEvent(QMouseEvent* event)
 {
-    QGraphicsView::mouseReleaseEvent(event);
 }
 
 void MyGisView::wheelEvent(QWheelEvent* event)
@@ -164,6 +171,7 @@ void MyGisView::setResolution(double resolution)
 {
     m_settings.m_resolution = resolution;
     m_settings.m_zoom = findZoomForResolution(resolution);
+    updateProjectionMatrix();
     refresh();
 }
 
@@ -176,6 +184,11 @@ void MyGisView::setViewExtent(const QRectF& extent)
 {
     m_settings.m_viewExtent = extent;
     setZoom(findZoomForViewExtent(extent));
+}
+
+void MyGisView::updateProjectionMatrix()
+{
+    m_proj->updateMatrix(m_settings);
 }
 
 void MyGisView::refreshMap()
