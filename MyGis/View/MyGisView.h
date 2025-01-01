@@ -64,4 +64,8 @@ private:
     MapSettings m_settings;
 
     QTimer* m_refreshMapTimer;
+
+    // 移动处理
+    bool m_dragMap;
+
 };
