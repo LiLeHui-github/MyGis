@@ -111,8 +111,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Core\MapSettings.cpp" />
     <ClCompile Include="Map\MapItemMap.cpp" />
-    <ClCompile Include="Layer\TMS\TmsLayer.cpp" />
+    <ClCompile Include="Layer\TMS\TmsImageLayer.cpp" />
     <ClCompile Include="Proj\MercatorProjection.cpp" />
+    <ClCompile Include="Source\TMS\TmsImageSource.cpp" />
     <ClCompile Include="View\MyGisView.cpp" />
     <ClCompile Include="Widgets\MyGisWidget.cpp" />
   </ItemGroup>
@@ -133,9 +134,11 @@
     <ClInclude Include="Core\ThreadPool.h" />
     <ClInclude Include="Layer\ImageLayer.h" />
     <ClInclude Include="Map\MapItemMap.h" />
-    <ClInclude Include="Layer\TMS\TmsLayer.h" />
+    <ClInclude Include="Layer\TMS\TmsImageLayer.h" />
     <ClInclude Include="Proj\MercatorProjection.h" />
     <ClInclude Include="Proj\Projection.h" />
+    <ClInclude Include="Source\ImageSource.h" />
+    <ClInclude Include="Source\TMS\TmsImageSource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

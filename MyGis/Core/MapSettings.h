@@ -3,7 +3,6 @@
 #include <QtCore/QPointF>
 #include <QtCore/QRectF>
 
-
 class MapSettings
 {
 public:

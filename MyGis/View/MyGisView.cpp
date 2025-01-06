@@ -52,7 +52,7 @@ MyGisView::MyGisView(Map* map, QWidget* parent)
 
     initResolution(0, 21);
     setViewExtent(sceneRect());
-    setCenterForProjection(QPointF{ 0, 0 });
+    setMapViewpointForProjection(QPointF{ 0, 0 });
 
     auto center = sceneRect().center();
     auto pt1 = m_proj->toProjection(center);
@@ -74,12 +74,12 @@ void MyGisView::setZoom(int zoom)
     setResolution(findResolutionForZoom(zoom));
 }
 
-void MyGisView::setCenterForView(const QPointF& pixel)
+void MyGisView::setMapViewpointForView(const QPointF& pixel)
 {
-    setCenterForProjection(m_proj->toProjection(pixel));
+    setMapViewpointForProjection(m_proj->toProjection(pixel));
 }
 
-void MyGisView::setCenterForProjection(const QPointF& projection)
+void MyGisView::setMapViewpointForProjection(const QPointF& projection)
 {
     m_settings.m_mapViewPoint = projection;
     updateProjectionMatrix();
@@ -115,7 +115,6 @@ void MyGisView::mousePressEvent(QMouseEvent* event)
         m_dragMap = true;
         m_dragPos = event->pos();
     }
-
 }
 
 void MyGisView::mouseMoveEvent(QMouseEvent* event)
@@ -132,7 +131,7 @@ void MyGisView::mouseMoveEvent(QMouseEvent* event)
         m_dragPos = current;
 
         // 移动视点
-        setCenterForProjection(getMapViewpoint() + offset);
+        setMapViewpointForProjection(getMapViewpoint() + offset);
     }
 
 }

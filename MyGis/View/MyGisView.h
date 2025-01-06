@@ -24,9 +24,9 @@ public:
 
     void setZoom(int zoom);
 
-    void setCenterForView(const QPointF& pixel);
+    void setMapViewpointForView(const QPointF& pixel);
 
-    void setCenterForProjection(const QPointF& projection);
+    void setMapViewpointForProjection(const QPointF& projection);
 
     int getZoom() const;
 
