@@ -4,17 +4,19 @@
 #include <vector>
 #include <unordered_map>
 
+#include <QtCore/QObject>
 #include <QtCore/QHashFunctions>
 
 #include "MyGisDefs.h"
 
 class ImageLayer;
 
-class Map
+class Map : public QObject
 {
+    Q_OBJECT
 public:
     Map();
-    ~Map();
+    ~Map() override;
 
     // 添加图层
     void addLayer(ImageLayer* layer);
@@ -27,6 +29,14 @@ public:
 
     // 获取所有图层
     void getAllLayer(std::vector<ImageLayer*>& layers) const;
+
+Q_SIGNALS:
+    void layerChanged(ImageLayer* layer);
+    void imageUpdate(ImageLayer* layer);
+
+private Q_SLOTS:
+    void OnLayerChanged();
+    void OnImageUpdate();
 
 private:
     std::unordered_map<QString, std::unique_ptr<ImageLayer>> m_layers;

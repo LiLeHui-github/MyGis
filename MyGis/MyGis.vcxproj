@@ -105,6 +105,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\Map.cpp" />
+    <ClCompile Include="Core\RWLock.cpp" />
     <ClCompile Include="Core\Semaphore.cpp" />
     <ClCompile Include="Core\ThreadPool.cpp" />
     <ClCompile Include="Layer\ImageLayer.cpp" />
@@ -127,13 +128,15 @@
     <QtMoc Include="View\MyGisView.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\Map.h" />
+    <QtMoc Include="Core\Map.h" />
     <ClInclude Include="Core\MapSettings.h" />
     <ClInclude Include="Core\MyGisDefs.h" />
+    <ClInclude Include="Core\RWLock.h" />
     <ClInclude Include="Core\Semaphore.h" />
     <ClInclude Include="Core\ThreadPool.h" />
-    <ClInclude Include="Layer\ImageLayer.h" />
-    <ClInclude Include="Map\MapItemMap.h" />
+    <ClInclude Include="Core\TileDefsHashFunctions.h" />
+    <QtMoc Include="Layer\ImageLayer.h" />
+    <QtMoc Include="Map\MapItemMap.h" />
     <ClInclude Include="Layer\TMS\TmsImageLayer.h" />
     <ClInclude Include="Proj\MercatorProjection.h" />
     <ClInclude Include="Proj\Projection.h" />

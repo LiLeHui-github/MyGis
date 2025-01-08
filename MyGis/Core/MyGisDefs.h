@@ -8,11 +8,27 @@
 // 图层Id
 using LayerId = QString;
 
-// 定义瓦片信息结构
-struct TileInfo {
+// 定义瓦片id
+struct TileId
+{
+    int z;
     int x;
     int y;
-    int zoom;
+
+    QPointF pixel;
+
+    bool operator == (const TileId& other) const noexcept
+    {
+        return z == other.z &&
+            x == other.x &&
+            y == other.y;
+    }
+};
+
+// 定义瓦片信息结构
+struct TileInfo
+{
+    TileId id;
     QImage image;
 };
 

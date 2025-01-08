@@ -3,6 +3,8 @@
 #include <QtCore/QPointF>
 #include <QtCore/QRectF>
 
+class Projection;
+
 class MapSettings
 {
 public:
@@ -18,5 +20,7 @@ public:
     // 视口范围
     QRectF m_viewExtent;
 
+    // 投影
+    Projection* m_proj;
 };
 

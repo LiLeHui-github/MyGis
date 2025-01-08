@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QtCore/QObject>
 #include <QtGui/QImage>
 
 #include "MyGis/Core/MapSettings.h"
@@ -7,11 +8,13 @@
 
 class ImageSource;
 
-class ImageLayer
+class ImageLayer : public QObject
 {
+    Q_OBJECT
 public:
     explicit ImageLayer(ImageSource* source) : m_source(source) {}
-    virtual ~ImageLayer() = default;
+    ~ImageLayer() override = default;
+
     virtual LayerId layerId() const = 0;
     virtual void startRender(const MapSettings& settings) = 0;
     virtual void cancelRender() {}
@@ -20,6 +23,22 @@ public:
     void setImageSource(ImageSource* source) { m_source = source; }
     ImageSource* getImageSource() { return m_source; }
     const ImageSource* getImageSource() const { return m_source; }
+
+Q_SIGNALS:
+    void layerChanged();
+    void imageUpdate();
+
+protected:
+    void notifyLayerChanged()
+    {
+        Q_EMIT layerChanged();
+    }
+
+    void notifyImageUpdate()
+    {
+        Q_EMIT imageUpdate();
+    }
+
 
 private:
     ImageSource* m_source = nullptr;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <map>
 
 #include <QtWidgets/QGraphicsView>
 
@@ -30,7 +31,15 @@ public:
 
     int getZoom() const;
 
+    int getMinZoom() const;
+
+    int getMaxZoom() const;
+
     double getResolution() const;
+
+    double getMinResolution() const;
+
+    double getMaxResolution() const;
 
     QPointF getMapViewpoint() const;
 

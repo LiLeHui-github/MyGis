@@ -11,11 +11,7 @@ public:
     virtual ~ImageSource() = default;
 
     // 请求
-    virtual void requestTilesByExtent(
-        const MapSettings& settings,
-        TileCallback onTileLoaded,                    // 单片瓦片加载完成回调
-        BatchCompleteCallback onComplete = nullptr    // 所有瓦片加载完成回调
-    ) = 0;
+    virtual void requestTilesByExtent(const MapSettings& settings, const QRectF& mapExtent, const QRectF& lastMapExtent, const TileCallback& OnTileLoaded, const BatchCompleteCallback& OnBatchComplete = nullptr) = 0;
 
     // 取消请求
     virtual void cancelRequest() = 0;

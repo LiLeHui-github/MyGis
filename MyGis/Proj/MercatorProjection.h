@@ -18,5 +18,8 @@ protected:
 
 private:
     QRectF m_extent;
-    QTransform m_matrix;
+
+    QTransform m_pixel_to_projection_matrix;
+    QTransform m_projection_to_pixel_matrix;
+
 };

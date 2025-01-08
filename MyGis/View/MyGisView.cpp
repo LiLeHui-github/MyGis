@@ -29,6 +29,8 @@ MyGisView::MyGisView(Map* map, QWidget* parent)
 {
     system("chcp 65001");
 
+    spdlog::set_pattern("[thread %t] %+");
+
     setMouseTracking(true);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -46,18 +48,16 @@ MyGisView::MyGisView(Map* map, QWidget* parent)
 
     m_proj = std::make_unique<MercatorProjection>();
 
+    m_settings.m_proj = m_proj.get();
+
     m_refreshMapTimer = new QTimer(this);
     m_refreshMapTimer->setSingleShot(true);
     connect(m_refreshMapTimer, &QTimer::timeout, this, &MyGisView::refreshMap);
 
     initResolution(0, 21);
     setViewExtent(sceneRect());
-    setMapViewpointForProjection(QPointF{ 0, 0 });
-
-    auto center = sceneRect().center();
-    auto pt1 = m_proj->toProjection(center);
-    auto pt2 = m_proj->toPixel(pt1);
-
+    //setMapViewpointForProjection(QPointF{ 13526041.708072895 , 3664472.687460804 });
+    setMapViewpointForProjection(QPointF{ 0 , 0 });
 }
 
 MyGisView::~MyGisView()
@@ -72,6 +72,16 @@ Map* MyGisView::getMap() const
 void MyGisView::setZoom(int zoom)
 {
     setResolution(findResolutionForZoom(zoom));
+}
+
+int MyGisView::getMinZoom() const
+{
+    return m_minZoom;
+}
+
+int MyGisView::getMaxZoom() const
+{
+    return m_maxZoom;
 }
 
 void MyGisView::setMapViewpointForView(const QPointF& pixel)
@@ -94,6 +104,16 @@ int MyGisView::getZoom() const
 double MyGisView::getResolution() const
 {
     return m_settings.m_resolution;
+}
+
+double MyGisView::getMinResolution() const
+{
+    return m_minResolution;
+}
+
+double MyGisView::getMaxResolution() const
+{
+    return m_maxResolution;
 }
 
 QPointF MyGisView::getMapViewpoint() const
@@ -119,11 +139,6 @@ void MyGisView::mousePressEvent(QMouseEvent* event)
 
 void MyGisView::mouseMoveEvent(QMouseEvent* event)
 {
-    //const QPoint& p = event->pos();
-    //const QPointF& pt1 = m_proj->toProjection(p);
-    //const QPointF& pt2 = m_proj->toPixel(pt1);
-    //spdlog::info("inputPixel:({},{}), mapPoint:({},{}), pixelPoint:({},{})", p.x(), p.y(), pt1.x(), pt1.y(), pt2.x(), pt2.y());
-
     if(m_dragMap)
     {
         const QPoint& current = event->pos();
@@ -131,7 +146,11 @@ void MyGisView::mouseMoveEvent(QMouseEvent* event)
         m_dragPos = current;
 
         // 移动视点
-        setMapViewpointForProjection(getMapViewpoint() + offset);
+        setMapViewpointForProjection(getMapViewpoint() + QPointF(offset.x(), -offset.y()));
+
+
+        spdlog::info("级别:{} 分辨率:{} 视点:({},{})", m_settings.m_zoom, m_settings.m_resolution, m_settings.m_mapViewPoint.x(), m_settings.m_mapViewPoint.y());
+
     }
 
 }
@@ -190,23 +209,24 @@ void MyGisView::initResolution(int min, int max)
 
 double MyGisView::findResolutionForZoom(int zoom)  const
 {
-    return m_maxResolution / std::pow(2, zoom);
+    return getMaxResolution() / std::pow(2, zoom - getMinZoom());
 }
 
 int MyGisView::findZoomForViewExtent(const QRectF& extent) const
 {
-    double size = std::min<double>(extent.width(), extent.height());
-    return std::ceil( std::log2(size / 256.0) );
+    double size = std::max<double>(extent.width(), extent.height());
+    double zoom = std::log2(size / 256.0);
+    return std::ceil(zoom);
 }
 
 int MyGisView::findZoomForResolution(double resolution) const
 {
-    return m_minZoom + std::ceil( std::log2(m_maxResolution / resolution) );
+    return getMinZoom() + std::ceil( std::log2(getMaxResolution() / resolution) );
 }
 
 double MyGisView::resolutionConstraint(double resolution) const
 {
-    return clamp<double>(resolution, m_minResolution, m_maxResolution);
+    return clamp<double>(resolution, getMinResolution(), getMaxResolution());
 }
 
 void MyGisView::setResolution(double resolution)
@@ -220,13 +240,14 @@ void MyGisView::setResolution(double resolution)
 void MyGisView::setViewExtent(const QRectF& extent)
 {
     m_settings.m_viewExtent = extent;
-    m_minZoom = findZoomForViewExtent(extent);
-    m_maxResolution = m_proj->getExtent().width() / (256.0 * std::pow(2, m_minZoom));
-    setZoom(m_minZoom);
+    int zoom = findZoomForViewExtent(extent);
+    initResolution(zoom, getMaxZoom());
+    setZoom(zoom);
 }
 
 void MyGisView::updateProjectionMatrix()
 {
+    spdlog::info("updateProjectionMatrix() called.");
     m_proj->updateMatrix(m_settings);
 }
 

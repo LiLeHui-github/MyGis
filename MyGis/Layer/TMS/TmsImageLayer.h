@@ -25,5 +25,8 @@ private:
     std::mutex m_mutex;
     QImage m_image;
 
+    QRectF m_lastMapExtent;
+    double m_lastResolution;
+
 };
 
