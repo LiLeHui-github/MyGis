@@ -27,19 +27,7 @@ LayerId TmsImageLayer::layerId() const
 void TmsImageLayer::startRender(const MapSettings& settings)
 {
     // 新地图范围
-    double width = settings.m_viewExtent.width() * settings.m_resolution;
-    double height = settings.m_viewExtent.height() * settings.m_resolution;
-
-    const QPointF& viewport = settings.m_mapViewPoint;
-    double helfWidth = width * 0.5;
-    double helfHeight = height * 0.5;
-
-    QRectF mapExtent = QRectF{
-        QPointF{viewport.x() - helfWidth, viewport.y() + helfHeight},
-        QPointF{viewport.x() + helfWidth, viewport.y() - helfHeight }
-    };
-
-    spdlog::info("{}", mapExtent.top());
+    const QRectF& mapExtent = settings.getMapExtent();
 
     if(m_lastMapExtent.isEmpty())
     {
@@ -49,7 +37,7 @@ void TmsImageLayer::startRender(const MapSettings& settings)
     bool needNewImage = false;
     {
         std::lock_guard<std::mutex> lock(m_mutex);
-        if(m_image.size() != settings.m_viewExtent.size())
+       // if(m_image.size() != settings.m_viewExtent.size())
         {
             m_image = QImage(settings.m_viewExtent.width(), settings.m_viewExtent.height(), QImage::Format_ARGB32_Premultiplied);
             needNewImage = true;
@@ -112,8 +100,10 @@ void TmsImageLayer::tileResponse(const TileInfo& ti)
         std::lock_guard<std::mutex> lock(m_mutex);
         
         QPainter painter(&m_image);
-        //painter.drawRect(ti.id.px, ti.id.py, 256, 256);
-        painter.drawImage(ti.id.pixel, ti.image);
+        //painter.drawImage(ti.id.pixel, ti.image);
+        QRectF rect = QRectF(ti.id.pixel, QSizeF(256, 256));
+        painter.drawRect(rect);
+        painter.drawText(rect, QString("%1/%2/%3").arg(ti.id.z).arg(ti.id.x).arg(ti.id.y), QTextOption(Qt::AlignCenter));
     }
    
     notifyImageUpdate();

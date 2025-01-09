@@ -22,5 +22,19 @@ public:
 
     // 投影
     Projection* m_proj;
+
+    QRectF getMapExtent() const
+    {
+        double width = m_viewExtent.width() * m_resolution;
+        double height = m_viewExtent.height() * m_resolution;
+
+        double helfWidth = width * 0.5;
+        double helfHeight = height * 0.5;
+
+        return QRectF{
+            QPointF{m_mapViewPoint.x() - helfWidth, m_mapViewPoint.y() + helfHeight},
+            QPointF{m_mapViewPoint.x() + helfWidth, m_mapViewPoint.y() - helfHeight }
+        };
+    }
 };
 

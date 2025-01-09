@@ -20,7 +20,6 @@ MapItemMap::MapItemMap(Map* map, QGraphicsScene* scene, QGraphicsItem* parent)
 
     connect(map, &Map::layerChanged, this, &MapItemMap::OnLayerChanged);
     connect(map, &Map::imageUpdate, this, &MapItemMap::OnImageUpdate);
-
 }
 
 MapItemMap::~MapItemMap()
@@ -79,6 +78,7 @@ void MapItemMap::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     {
         painter->drawImage(QPointF(0, 0), layer->getImage());
     }
+
 }
 
 void MapItemMap::OnLayerChanged(ImageLayer* layer)

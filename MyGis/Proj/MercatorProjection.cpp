@@ -41,7 +41,7 @@ void MercatorProjection::updateMatrix(const MapSettings& settings)
     m_projection_to_pixel_matrix = QTransform()
         .translate(viewCenter.x(), viewCenter.y())
         .scale(invertResolution, invertResolution)
-        .translate(-center.x(), -center.y());
+        .translate(-center.x(), center.y());
 }
 
 QPointF MercatorProjection::toProjection(const QPointF& pixel) const

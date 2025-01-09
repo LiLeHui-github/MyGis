@@ -148,8 +148,8 @@ void MyGisView::mouseMoveEvent(QMouseEvent* event)
         // 移动视点
         setMapViewpointForProjection(getMapViewpoint() + QPointF(offset.x(), -offset.y()));
 
-
-        spdlog::info("级别:{} 分辨率:{} 视点:({},{})", m_settings.m_zoom, m_settings.m_resolution, m_settings.m_mapViewPoint.x(), m_settings.m_mapViewPoint.y());
+        const QRectF& mapExtent = m_settings.getMapExtent();
+        spdlog::info("Extent({},{} : {},{})", mapExtent.left(), mapExtent.top(), mapExtent.right(), mapExtent.bottom());
 
     }
 

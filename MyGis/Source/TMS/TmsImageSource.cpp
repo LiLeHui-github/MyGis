@@ -18,10 +18,7 @@ TmsImageSource::~TmsImageSource()
 
 void TmsImageSource::requestTilesByExtent(const MapSettings& settings, const QRectF& mapExtent, const QRectF& lastMapExtent, const TileCallback& OnTileLoaded, const BatchCompleteCallback& OnBatchComplete)
 {
-    spdlog::info("开始请求");
-
     // 计算瓦片坐标
-
     const QRectF& wordExtent = settings.m_proj->getExtent();
     const QPointF& minLeftTop = wordExtent.topLeft();
 
@@ -30,11 +27,12 @@ void TmsImageSource::requestTilesByExtent(const MapSettings& settings, const QRe
     double _xmax = (mapExtent.right() - minLeftTop.x()) / settings.m_resolution / 256.0;
     double _ymax = (minLeftTop.y() - mapExtent.bottom()) / settings.m_resolution / 256.0;
 
-    int xmin = std::min<int>(std::floor(_xmin), 0) ;
-    int ymin = std::min<int>(std::floor(_ymax), 0);
+    int xmin = std::max<int>(std::floor(_xmin), 0);
+    int ymin = std::max<int>(std::floor(_ymin), 0);
 
-    int xmax = std::ceil(_xmax + 0.5);
-    int ymax = std::ceil(_ymax + 0.5);
+    int cnt = std::pow(2, settings.m_zoom);
+    int xmax = std::min<int>(std::ceil(_xmax), cnt);
+    int ymax = std::min<int>(std::ceil(_ymax), cnt);
 
     std::unordered_set<TileId> syncRequesIds;
     syncRequesIds.reserve((ymax - ymin + 1) * (xmax - xmin + 1));
@@ -46,11 +44,12 @@ void TmsImageSource::requestTilesByExtent(const MapSettings& settings, const QRe
             // 计算瓦片的世界坐标
             QPointF worldPos(x * 256 * settings.m_resolution, y * 256 * settings.m_resolution);
             // 转换为像素坐标
-            QPointF pixelPos = settings.m_proj->toPixel(worldPos) - QPointF(128, 128);
-
+            const QPointF& pixelPos = settings.m_proj->toPixel(worldPos) - QPointF(128, 128);
             syncRequesIds.insert(createId(settings.m_zoom, x, y, pixelPos));
         }
     }
+
+    spdlog::info("开始请求: {}条", syncRequesIds.size());
 
     auto batch = std::make_shared<BatchContext>();
     batch->totalRequests = static_cast<int>(syncRequesIds.size());
@@ -108,9 +107,6 @@ void TmsImageSource::syncRequest(const TileId& id, const TileCallback& OnTileLoa
         return;
     }
 
-    TileInfo info;
-    info.id = id;
-
     if (findBlack(id))
     {
         if(batch)
@@ -120,6 +116,8 @@ void TmsImageSource::syncRequest(const TileId& id, const TileCallback& OnTileLoa
         return;
     }
 
+    TileInfo info;
+ 
     if (!findCache(id, info))
     {
         QString fileName = m_url.arg(id.z).arg(id.x).arg(id.y);
@@ -147,6 +145,7 @@ void TmsImageSource::syncRequest(const TileId& id, const TileCallback& OnTileLoa
 
         spdlog::info("成功加载{}", fileName.toStdString());
 
+        info.id = id;
         storeCache(info);
     }
 
