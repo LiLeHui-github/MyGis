@@ -124,7 +124,6 @@ QPointF MyGisView::getMapViewpoint() const
 void MyGisView::refresh()
 {
     //spdlog::info("refresh() called.");
-    m_mapItem->stopRender();
     m_refreshMapTimer->start(1);
 }
 
@@ -147,12 +146,7 @@ void MyGisView::mouseMoveEvent(QMouseEvent* event)
 
         // 移动视点
         setMapViewpointForProjection(getMapViewpoint() + QPointF(offset.x(), -offset.y()));
-
-        const QRectF& mapExtent = m_settings.getMapExtent();
-        spdlog::info("Extent({},{} : {},{})", mapExtent.left(), mapExtent.top(), mapExtent.right(), mapExtent.bottom());
-
     }
-
 }
 
 void MyGisView::mouseReleaseEvent(QMouseEvent* event)
@@ -241,18 +235,29 @@ void MyGisView::setViewExtent(const QRectF& extent)
 {
     m_settings.m_viewExtent = extent;
     int zoom = findZoomForViewExtent(extent);
-    initResolution(zoom, getMaxZoom());
-    setZoom(zoom);
+    if(zoom > getZoom())
+    {
+        setZoom(zoom);
+    }
+    else
+    {
+        updateProjectionMatrix();
+        refresh();
+    }
 }
 
 void MyGisView::updateProjectionMatrix()
 {
-    spdlog::info("updateProjectionMatrix() called.");
+    //spdlog::info("updateProjectionMatrix() called.");
     m_proj->updateMatrix(m_settings);
 }
 
 void MyGisView::refreshMap()
 {
     //spdlog::info("refreshMap() called.");
+    const QRectF& mapExtent = m_settings.getMapExtent();
+    spdlog::info("Zoom {} Extent({},{} : {},{})", m_settings.m_zoom, mapExtent.left(), mapExtent.top(), mapExtent.right(), mapExtent.bottom());
+
+    m_mapItem->stopRender();
     m_mapItem->startRender(m_settings);
 }

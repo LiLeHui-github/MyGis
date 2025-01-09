@@ -9,7 +9,6 @@ int main(int argc, char* argv[])
     QApplication a(argc, argv);
 
     MyGisView w;
-    w.resize(258, 258);
     w.show();
     w.getMap()->addLayer(new TmsImageLayer("E:/BaiduNetdiskDownload/BingMapTiles/%1/%2/%3.png"));
 
