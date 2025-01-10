@@ -7,7 +7,7 @@
 #include <spdlog/spdlog.h>
 
 #include "MyGis/Source/TMS/TmsImageSource.h"
-#include "Proj/Projection.h"
+#include "MyGis/Proj/Projection.h"
 
 TmsImageLayer::TmsImageLayer(const QString& url)
     : ImageLayer(new TmsImageSource(url))
@@ -27,28 +27,43 @@ LayerId TmsImageLayer::layerId() const
 void TmsImageLayer::startRender(const MapSettings& settings)
 {
     // 新地图范围
-    const QRectF& mapExtent = settings.getMapExtent();
+    const RectangleExtent& mapExtent = settings.getMapExtent();
 
-    if(m_lastMapExtent.isEmpty())
+    bool newImage = false;
     {
-        m_lastMapExtent = mapExtent;
+        WriteGuard lock(m_rwLock);
+        if(m_image.size() != settings.m_viewExtent.size() || m_lastResolution != settings.m_resolution)
+        {
+            m_image = QImage(settings.m_viewExtent.width(), settings.m_viewExtent.height(), QImage::Format_ARGB32_Premultiplied);
+            newImage = true;
+        }
     }
 
-    m_image = QImage(settings.m_viewExtent.width(), settings.m_viewExtent.height(), QImage::Format_ARGB32_Premultiplied);
+    if(!newImage)
+    {
+        const QPointF& offset = m_lastViewCenter - settings.m_viewExtent.center();
 
+        {
+            WriteGuard lock(m_rwLock);
+            QPainter painter(&m_image);
+            painter.drawImage(offset, m_image);
+        }
+    }
+  
     // 请求瓦片
     getImageSource()->requestTilesByExtent(settings,
         mapExtent,
         m_lastMapExtent,
-        [this](const TileInfo& ti)
+        [this](const TileId& id, const QImage& image)
         {
-            tileResponse(ti);
+            tileResponse(id, image);
         },
         [this]()
         {
             tileBatchComplete();
         });
 
+    m_lastViewCenter = settings.m_viewExtent.center();
     m_lastMapExtent = mapExtent;
     m_lastResolution = settings.m_resolution;
 
@@ -61,20 +76,19 @@ void TmsImageLayer::cancelRender()
 
 QImage TmsImageLayer::getImage()
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    ReadGuard lock(m_rwLock);
     return m_image;
 }
 
-void TmsImageLayer::tileResponse(const TileInfo& ti)
+void TmsImageLayer::tileResponse(const TileId& id, const QImage& image)
 {
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        
+        WriteGuard lock(m_rwLock);
         QPainter painter(&m_image);
-        //painter.drawImage(ti.id.pixel, ti.image);
-        QRectF rect = QRectF(ti.id.pixel, QSizeF(256, 256));
-        painter.drawRect(rect);
-        painter.drawText(rect, QString("%1/%2/%3").arg(ti.id.z).arg(ti.id.x).arg(ti.id.y), QTextOption(Qt::AlignCenter));
+        painter.drawImage(id.pixel, image);
+        //QRectF rect = QRectF(id.pixel, QSizeF(256, 256));
+        //painter.drawText(rect, QString("%1/%2/%3").arg(id.z).arg(id.x).arg(id.y), QTextOption(Qt::AlignCenter));
+        //painter.drawRect(rect);
     }
    
     notifyImageUpdate();
@@ -82,5 +96,5 @@ void TmsImageLayer::tileResponse(const TileInfo& ti)
 
 void TmsImageLayer::tileBatchComplete()
 {
-    spdlog::info("批量加载完成\n");
+    //spdlog::info("批量加载完成\n");
 }

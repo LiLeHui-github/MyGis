@@ -2,14 +2,16 @@
 
 MercatorProjection::MercatorProjection()
 {
-    m_extent = QRectF(QPointF(-20037508.342789244, 20037508.342789244), QPointF(20037508.342789244, -20037508.342789244));
+    //x -20037508.3427892,20037508.3427892
+    //y -20037508.3427892,20037508.3427892
+    m_extent = RectangleExtent(-20037508.342789244, 20037508.342789244, -20037508.342789244, 20037508.342789244);
 }
 
 MercatorProjection::~MercatorProjection()
 {
 }
 
-QRectF MercatorProjection::getExtent() const
+RectangleExtent MercatorProjection::getExtent() const
 {
     return m_extent;
 }

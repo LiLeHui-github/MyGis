@@ -255,9 +255,6 @@ void MyGisView::updateProjectionMatrix()
 void MyGisView::refreshMap()
 {
     //spdlog::info("refreshMap() called.");
-    const QRectF& mapExtent = m_settings.getMapExtent();
-    spdlog::info("Zoom {} Extent({},{} : {},{})", m_settings.m_zoom, mapExtent.left(), mapExtent.top(), mapExtent.right(), mapExtent.bottom());
-
     m_mapItem->stopRender();
     m_mapItem->startRender(m_settings);
 }

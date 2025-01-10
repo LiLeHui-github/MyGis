@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QtCore/QPointF>
-#include <QtCore/QRectF>
 
 #include "MyGis/Core/MapSettings.h"
 
@@ -12,7 +11,7 @@ public:
     virtual ~Projection() = default;
 
     // 获取投影范围
-    virtual QRectF getExtent() const = 0;
+    virtual RectangleExtent getExtent() const = 0;
 
     // 更新变换矩阵
     virtual void updateMatrix(const MapSettings& settings) {}
@@ -22,4 +21,5 @@ public:
 
     // 将投影坐标转换到像素坐标
     virtual QPointF toPixel(const QPointF &projection) const = 0;
+
 };

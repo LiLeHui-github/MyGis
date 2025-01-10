@@ -1,8 +1,9 @@
 #pragma once
 
-#include <mutex>
+#include "MyGis/Core/RWLock.h"
 
 #include "MyGis/Core/MyGisDefs.h"
+#include "MyGis/Core/RectangleExtent.h"
 #include "MyGis/Layer/ImageLayer.h"
 
 class TmsImageLayer : public ImageLayer
@@ -18,14 +19,15 @@ protected:
     QImage getImage() override;
 
 private:
-    void tileResponse(const TileInfo& ti);
+    void tileResponse(const TileId& id, const QImage& image);
     void tileBatchComplete();
 
 private:
-    std::mutex m_mutex;
+    RWLock m_rwLock;
     QImage m_image;
 
-    QRectF m_lastMapExtent;
+    QPointF m_lastViewCenter;
+    RectangleExtent m_lastMapExtent;
     double m_lastResolution;
 
 };

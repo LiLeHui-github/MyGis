@@ -16,22 +16,20 @@ public:
     explicit TmsImageSource(const QString& url);
     ~TmsImageSource() override;
 
-    void requestTilesByExtent(const MapSettings& settings, const QRectF& mapExtent, const QRectF& lastMapExtent, const TileCallback& OnTileLoaded, const BatchCompleteCallback& OnBatchComplete) override;
+    void requestTilesByExtent(const MapSettings& settings, const RectangleExtent& mapExtent, const RectangleExtent& lastMapExtent, const TileCallback& OnTileLoaded, const BatchCompleteCallback& OnBatchComplete) override;
 
     void cancelRequest() override;
 
 private:
-    static TileId createId(int z, int x, int y, const QPointF& pixel);
-
     void syncRequest(const TileId& id, const TileCallback& OnTileLoaded);
 
     bool findBlack(const TileId& id);
 
     void storeBlack(const TileId& id);
 
-    bool findCache(const TileId& id, TileInfo& info);
+    bool findCache(const TileId& id, QImage& image);
 
-    void storeCache(const TileInfo& info);
+    void storeCache(const TileId& id, const QImage& image);
 
     struct BatchContext
     {
@@ -42,21 +40,26 @@ private:
         // 请求完成回调
         BatchCompleteCallback onBatchComplete;
 
-        void decreaseRequest()
+        void completeRequest()
         {
             if (--totalRequests == 0)
             {
-                callBatchComplete();
+                if (onBatchComplete)
+                {
+                    onBatchComplete();
+                }
             }
         }
 
-        void callBatchComplete()
+        void cancelAllRequest()
         {
-            if(onBatchComplete)
+            totalRequests = 0;
+            if (onBatchComplete)
             {
                 onBatchComplete();
             }
         }
+
     };
 
 private:
@@ -68,7 +71,7 @@ private:
     std::unordered_set<TileId> m_blacks;
 
     // 缓存
-    std::unordered_map<TileId, TileInfo> m_caches;
+    std::unordered_map<TileId, QImage> m_caches;
 
     // 当前批次的上下文
     std::mutex m_batchMutex;

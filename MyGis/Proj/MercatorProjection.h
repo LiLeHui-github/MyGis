@@ -11,13 +11,13 @@ public:
     ~MercatorProjection() override;
 
 protected:
-    QRectF getExtent() const override;
+    RectangleExtent getExtent() const override;
     void updateMatrix(const MapSettings& settings) override;
     QPointF toProjection(const QPointF &pixel) const override;
     QPointF toPixel(const QPointF &projection) const override;
 
 private:
-    QRectF m_extent;
+    RectangleExtent m_extent;
 
     QTransform m_pixel_to_projection_matrix;
     QTransform m_projection_to_pixel_matrix;

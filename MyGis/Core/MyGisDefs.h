@@ -17,6 +17,18 @@ struct TileId
 
     QPointF pixel;
 
+    TileId() : z(0), x(0), y(0)
+    {
+    }
+
+    TileId(int _z, int _x, int _y) : z(_z), x(_x), y(_y)
+    {
+    }
+
+    TileId(int _z, int _x, int _y, const QPointF& _pixel) : z(_z), x(_x), y(_y), pixel(_pixel)
+    {
+    }
+
     bool operator == (const TileId& other) const noexcept
     {
         return z == other.z &&
@@ -25,13 +37,6 @@ struct TileId
     }
 };
 
-// 定义瓦片信息结构
-struct TileInfo
-{
-    TileId id;
-    QImage image;
-};
-
 // 定义回调函数类型
-using TileCallback = std::function<void(const TileInfo&)>;
+using TileCallback = std::function<void(const TileId& id, const QImage& image)>;
 using BatchCompleteCallback = std::function<void()>;
