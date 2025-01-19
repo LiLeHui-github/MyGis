@@ -54,15 +54,27 @@ protected:
 
 private:
     void initResolution(int min, int max);
+
     double findResolutionForZoom(int zoom) const;
+
     int findZoomForViewExtent(const QRectF& extent) const;
-    int findZoomForResolution(double resolution) const;
+
+    int findUpperZoomForResolution(double resolution) const;
+
+    int findLowerZoomForResolution(double resolution) const;
+
     double resolutionConstraint(double resolution) const;
 
     void setResolution(double resolution);
 
     void setViewExtent(const QRectF& extent);
 
+    // 放大
+    void zoomIn();
+
+    // 缩小
+    void zoomOut();
+        
     void updateProjectionMatrix();
 
     void refreshMap();

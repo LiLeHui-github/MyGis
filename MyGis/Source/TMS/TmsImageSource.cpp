@@ -21,35 +21,36 @@ void TmsImageSource::requestTilesByExtent(const MapSettings& settings, const Rec
     //spdlog::info("开始请求");
 
     // 计算瓦片坐标
-
-    Projection* proj = settings.m_proj;
-
-    const RectangleExtent& worldExtent = proj->getExtent();
+    if(m_worldExtent.isNull())
+    {
+        Projection* proj = settings.m_proj;
+        m_worldExtent = proj->getExtent();
+    }
 
     int zoom = settings.m_zoom;
-    double unitTile = settings.m_resolution * 256.0;
+
+    // 考虑缩放
+    double baseResolution = m_worldExtent.width() / (std::pow(2, zoom) * 256.0);
+    double scale = baseResolution / settings.m_resolution;
+
+    double unitTile = settings.m_resolution * 256.0 * scale;
     double invertUnitTile = 1.0 / unitTile;
 
-    int last_xmin = std::floor((lastMapExtent.xMin - worldExtent.xMin) * invertUnitTile);
-    int last_ymin = std::floor((worldExtent.yMax - lastMapExtent.yMax) * invertUnitTile);
-    int last_xmax = std::ceil((lastMapExtent.xMax - worldExtent.xMin) * invertUnitTile);
-    int last_ymax = std::ceil((worldExtent.yMax - lastMapExtent.yMin) * invertUnitTile);
-
-    int xmin = std::floor((mapExtent.xMin - worldExtent.xMin) * invertUnitTile);
-    int ymin = std::floor((worldExtent.yMax - mapExtent.yMax) * invertUnitTile);
-    int xmax = std::ceil((mapExtent.xMax - worldExtent.xMin) * invertUnitTile);
-    int ymax = std::ceil((worldExtent.yMax - mapExtent.yMin) * invertUnitTile);
+    TileRange curRange;
+    calcTileRange(invertUnitTile, mapExtent, curRange);
 
     std::vector<TileId> requestTileIds;
-
-    for(int y = ymin; y < ymax; ++y)
+    for(int y = curRange.yMin; y < curRange.yMax; ++y)
     {
-        for (int x = xmin; x < xmax; ++x)
+        for (int x = curRange.xMin; x < curRange.xMax; ++x)
         {
-
+            // 创建新的瓦片ID并添加到请求列表
+            QPointF pixel = settings.m_proj->toPixel(QPointF{m_worldExtent.xMin + x * unitTile, m_worldExtent.yMax - y * unitTile }) - (QPointF{128, 128} * scale);
+            requestTileIds.emplace_back(zoom, x, y, scale, pixel);
         }
     }
- 
+
+    spdlog::info("{}, {}, {}", zoom, scale, requestTileIds.size());
 
     std::shared_ptr<BatchContext> batch = std::make_shared<BatchContext>();
     batch->totalRequests = static_cast<int>(requestTileIds.size());
@@ -106,6 +107,28 @@ void TmsImageSource::cancelRequest()
     {
         batch->cancelled = true;
     }
+}
+
+void TmsImageSource::calcTileRange(double invertUnitTile,
+    const RectangleExtent& mapExtent,
+    TileRange& range) const
+{
+    // 计算相对于世界范围左上角的偏移距离
+    double offsetX = mapExtent.xMin - m_worldExtent.xMin;
+    double offsetY = m_worldExtent.yMax - mapExtent.yMax;
+    double offsetMaxX = mapExtent.xMax -  m_worldExtent.xMin;
+    double offsetMaxY = m_worldExtent.yMax - mapExtent.yMin;
+
+    double xMin = offsetX * invertUnitTile;
+    double yMin = offsetY * invertUnitTile;
+    double xMax = offsetMaxX * invertUnitTile;
+    double yMax = offsetMaxY * invertUnitTile;
+
+    // 转换为瓦片索引
+    range.xMin = static_cast<int>(std::floor(xMin));
+    range.yMin = static_cast<int>(std::floor(yMin));
+    range.xMax = static_cast<int>(std::ceil(xMax));
+    range.yMax = static_cast<int>(std::ceil(yMax));
 }
 
 void TmsImageSource::syncRequest(const TileId& id, const TileCallback& OnTileLoaded)

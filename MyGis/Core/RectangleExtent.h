@@ -36,6 +36,11 @@ public:
         return QSizeF(width(), height());
     }
 
+    bool isNull() const
+    {
+        return width() <= 0 || height() <= 0;
+    }
+
     double xMin;
     double xMax;
     double yMin;

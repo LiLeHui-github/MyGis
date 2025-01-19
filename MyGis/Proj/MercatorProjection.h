@@ -13,8 +13,8 @@ public:
 protected:
     RectangleExtent getExtent() const override;
     void updateMatrix(const MapSettings& settings) override;
-    QPointF toProjection(const QPointF &pixel) const override;
-    QPointF toPixel(const QPointF &projection) const override;
+    QPointF toProjection(double px, double py) const override;
+    QPointF toPixel(double x, double y) const override;
 
 private:
     RectangleExtent m_extent;

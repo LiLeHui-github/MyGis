@@ -13,6 +13,15 @@
 class TmsImageSource : public ImageSource
 {
 public:
+
+    struct TileRange
+    {
+        int xMin;
+        int xMax;
+        int yMin;
+        int yMax;
+    };
+
     explicit TmsImageSource(const QString& url);
     ~TmsImageSource() override;
 
@@ -21,6 +30,8 @@ public:
     void cancelRequest() override;
 
 private:
+    void calcTileRange(double invertUnitTile, const RectangleExtent& mapExtent, TileRange& range) const;
+
     void syncRequest(const TileId& id, const TileCallback& OnTileLoaded);
 
     bool findBlack(const TileId& id);
@@ -66,6 +77,8 @@ private:
     QString m_url;
 
     RWLock m_rwlock;
+
+    RectangleExtent m_worldExtent;
 
     // 黑名单
     std::unordered_set<TileId> m_blacks;

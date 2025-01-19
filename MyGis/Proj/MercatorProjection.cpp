@@ -32,7 +32,7 @@ void MercatorProjection::updateMatrix(const MapSettings& settings)
 
     m_pixel_to_projection_matrix = QTransform()
         .translate(center.x(), center.y())
-        .scale(resolution, resolution)
+        .scale(resolution, -resolution)
         .translate(-viewCenter.x(), -viewCenter.y());
 
     // 第一步计算从视点到投影坐标的地图单位偏移
@@ -42,18 +42,28 @@ void MercatorProjection::updateMatrix(const MapSettings& settings)
     double invertResolution = 1.0 / resolution;
     m_projection_to_pixel_matrix = QTransform()
         .translate(viewCenter.x(), viewCenter.y())
-        .scale(invertResolution, invertResolution)
-        .translate(-center.x(), center.y());
+        .scale(invertResolution, -invertResolution)
+        .translate(-center.x(), -center.y());
 }
 
-QPointF MercatorProjection::toProjection(const QPointF& pixel) const
+QPointF MercatorProjection::toProjection(double px, double py) const
 {
+    double rx;
+    double ry;
+
     // 将像素坐标转换到墨卡托投影坐标
-    return m_pixel_to_projection_matrix.map(pixel);
+    m_pixel_to_projection_matrix.map(px, py, &rx, &ry);
+
+    return QPointF{ rx, ry };
 }
 
-QPointF MercatorProjection::toPixel(const QPointF& projection) const
+QPointF MercatorProjection::toPixel(double x, double y) const
 {
-    // 将墨卡托投影坐标转换为像素坐标
-    return m_projection_to_pixel_matrix.map(projection);
+    double rx;
+    double ry;
+
+    // 将像素坐标转换到墨卡托投影坐标
+    m_projection_to_pixel_matrix.map(x, y, &rx, &ry);
+
+    return QPointF{ rx, ry };
 }

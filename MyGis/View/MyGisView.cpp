@@ -156,27 +156,18 @@ void MyGisView::mouseReleaseEvent(QMouseEvent* event)
 
 void MyGisView::wheelEvent(QWheelEvent* event)
 {
-    double currentResolution = getResolution();
-    int currentZoom = findZoomForResolution(currentResolution);
-    double baseResolution = findResolutionForZoom(currentZoom);
-    double newResolution = 0;
 
     if(event->angleDelta().y() > 0)
     {
-        // 放大 
-        double targetResolution = findResolutionForZoom(currentZoom + 1);
-        double step = (baseResolution - targetResolution) * 0.5;
-        newResolution = resolutionConstraint(currentResolution - step);
+        // 放大
+        zoomIn();
     }
     else
     {
         // 缩小
-        double targetResolution = findResolutionForZoom(currentZoom - 1);
-        double step = (targetResolution - baseResolution) * 0.5;
-        newResolution = resolutionConstraint(currentResolution + step);
+        zoomOut();
     }
 
-    setResolution(newResolution);
 }
 
 void MyGisView::resizeEvent(QResizeEvent* event)
@@ -213,9 +204,16 @@ int MyGisView::findZoomForViewExtent(const QRectF& extent) const
     return std::ceil(zoom);
 }
 
-int MyGisView::findZoomForResolution(double resolution) const
+int MyGisView::findUpperZoomForResolution(double resolution) const
 {
-    return getMinZoom() + std::ceil( std::log2(getMaxResolution() / resolution) );
+    double zoom = std::log2(getMaxResolution() / resolution);
+    return getMinZoom() + std::ceil(zoom);
+}
+
+int MyGisView::findLowerZoomForResolution(double resolution) const
+{
+    double zoom = std::log2(getMaxResolution() / resolution);
+    return getMinZoom() + std::floor(zoom);
 }
 
 double MyGisView::resolutionConstraint(double resolution) const
@@ -226,7 +224,7 @@ double MyGisView::resolutionConstraint(double resolution) const
 void MyGisView::setResolution(double resolution)
 {
     m_settings.m_resolution = resolution;
-    m_settings.m_zoom = findZoomForResolution(resolution);
+    m_settings.m_zoom = findLowerZoomForResolution(resolution);
     updateProjectionMatrix();
     refresh();
 }
@@ -246,15 +244,63 @@ void MyGisView::setViewExtent(const QRectF& extent)
     }
 }
 
+void MyGisView::zoomIn()
+{
+    double currentResolution = getResolution();
+
+    // 检查是否已经达到最小分辨率（最大缩放级别）
+    if (currentResolution <= getMinResolution())
+    {
+        return;  // 已经是最大缩放级别，不能再放大
+    }
+
+    int currentZoom = findLowerZoomForResolution(currentResolution);
+    double currentbaseResolution = findResolutionForZoom(currentZoom);
+    double nextBaseResolution = findResolutionForZoom(currentZoom + 1);
+
+    double newResolution = (currentbaseResolution + nextBaseResolution) / 2.0;
+
+    // 如果当前分辨率等于两个基准分辨率的中值, 直接为下一级的分辨率
+    if ((currentResolution - newResolution) <= std::numeric_limits<double>::epsilon())
+    {
+        newResolution = nextBaseResolution;
+    }
+
+    setResolution(resolutionConstraint(newResolution));
+}
+
+void MyGisView::zoomOut()
+{
+    double currentResolution = getResolution();
+
+    // 检查是否已经达到最大分辨率（最小缩放级别）
+    if (currentResolution >= getMaxResolution())
+    {
+        return;  // 已经是最小缩放级别，不能再缩小
+    }
+
+    int currentZoom = findUpperZoomForResolution(currentResolution);
+    double currentbaseResolution = findResolutionForZoom(currentZoom);
+    double nextBaseResolution = findResolutionForZoom(currentZoom - 1);
+
+    double newResolution = (currentbaseResolution + nextBaseResolution) / 2.0;
+
+    // 如果当前分辨率等于两个基准分辨率的中值, 直接为上一级的分辨率
+    if ((newResolution - currentResolution) <= std::numeric_limits<double>::epsilon())
+    {
+        newResolution = nextBaseResolution;
+    }
+
+    setResolution(resolutionConstraint(newResolution));
+}
+
 void MyGisView::updateProjectionMatrix()
 {
-    //spdlog::info("updateProjectionMatrix() called.");
     m_proj->updateMatrix(m_settings);
 }
 
 void MyGisView::refreshMap()
 {
-    //spdlog::info("refreshMap() called.");
     m_mapItem->stopRender();
     m_mapItem->startRender(m_settings);
 }

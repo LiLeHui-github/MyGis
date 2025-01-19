@@ -15,17 +15,18 @@ struct TileId
     int x;
     int y;
 
+    double scale;
     QPointF pixel;
 
-    TileId() : z(0), x(0), y(0)
+    TileId() : z(0), x(0), y(0), scale(1)
     {
     }
 
-    TileId(int _z, int _x, int _y) : z(_z), x(_x), y(_y)
+    TileId(int _z, int _x, int _y, double _scale) : z(_z), x(_x), y(_y), scale(_scale)
     {
     }
 
-    TileId(int _z, int _x, int _y, const QPointF& _pixel) : z(_z), x(_x), y(_y), pixel(_pixel)
+    TileId(int _z, int _x, int _y, double _scale, const QPointF& _pixel) : z(_z), x(_x), y(_y), scale(_scale), pixel(_pixel)
     {
     }
 

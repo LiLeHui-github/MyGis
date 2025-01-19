@@ -17,9 +17,20 @@ public:
     virtual void updateMatrix(const MapSettings& settings) {}
 
     // 将像素坐标转换到投影坐标
-    virtual QPointF toProjection(const QPointF &pixel) const = 0;
+    virtual QPointF toProjection(double px, double py) const = 0;
 
     // 将投影坐标转换到像素坐标
-    virtual QPointF toPixel(const QPointF &projection) const = 0;
+    virtual QPointF toPixel(double x, double y) const = 0;
 
+    // 将像素坐标转换到投影坐标
+    QPointF toProjection(const QPointF &pixel) const
+    {
+        return toProjection(pixel.x(), pixel.y());
+    }
+
+    // 将投影坐标转换到像素坐标
+    QPointF toPixel(const QPointF &projection) const
+    {
+        return toPixel(projection.x(), projection.y());
+    }
 };

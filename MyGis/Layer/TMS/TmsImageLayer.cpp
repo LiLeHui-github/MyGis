@@ -32,23 +32,23 @@ void TmsImageLayer::startRender(const MapSettings& settings)
     bool newImage = false;
     {
         WriteGuard lock(m_rwLock);
-        if(m_image.size() != settings.m_viewExtent.size() || m_lastResolution != settings.m_resolution)
+       // if(m_image.size() != settings.m_viewExtent.size() || m_lastResolution != settings.m_resolution)
         {
             m_image = QImage(settings.m_viewExtent.width(), settings.m_viewExtent.height(), QImage::Format_ARGB32_Premultiplied);
             newImage = true;
         }
     }
 
-    if(!newImage)
-    {
-        const QPointF& offset = m_lastViewCenter - settings.m_viewExtent.center();
-
-        {
-            WriteGuard lock(m_rwLock);
-            QPainter painter(&m_image);
-            painter.drawImage(offset, m_image);
-        }
-    }
+    //if(!newImage)
+    //{
+    //    const QPointF& offset = settings.m_proj->toPixel(m_lastViewCenter) - settings.m_proj->toPixel(settings.m_mapViewPoint);
+    //    spdlog::info("{}, {}", offset.x(), offset.y());
+    //    {
+    //        WriteGuard lock(m_rwLock);
+    //        QPainter painter(&m_image);
+    //        painter.drawImage(offset, m_image);
+    //    }
+    //}
   
     // 请求瓦片
     getImageSource()->requestTilesByExtent(settings,
@@ -63,7 +63,7 @@ void TmsImageLayer::startRender(const MapSettings& settings)
             tileBatchComplete();
         });
 
-    m_lastViewCenter = settings.m_viewExtent.center();
+    m_lastViewCenter = settings.m_mapViewPoint;
     m_lastMapExtent = mapExtent;
     m_lastResolution = settings.m_resolution;
 
@@ -85,9 +85,9 @@ void TmsImageLayer::tileResponse(const TileId& id, const QImage& image)
     {
         WriteGuard lock(m_rwLock);
         QPainter painter(&m_image);
-        painter.drawImage(id.pixel, image);
-        //QRectF rect = QRectF(id.pixel, QSizeF(256, 256));
-        //painter.drawText(rect, QString("%1/%2/%3").arg(id.z).arg(id.x).arg(id.y), QTextOption(Qt::AlignCenter));
+        painter.drawImage(id.pixel, image.scaled(id.scale * 256, id.scale * 256));
+        //QRectF rect = QRectF(id.pixel, QSizeF(256, 256) * id.scale);
+        //painter.drawText(rect, QString("%1/%2/%3").arg(id.z).arg(id.x).arg(id.y), QTextOption(Qt::AlignTop | Qt::AlignLeft));
         //painter.drawRect(rect);
     }
    
@@ -96,5 +96,5 @@ void TmsImageLayer::tileResponse(const TileId& id, const QImage& image)
 
 void TmsImageLayer::tileBatchComplete()
 {
-    //spdlog::info("批量加载完成\n");
+    spdlog::info("批量加载完成\n");
 }
