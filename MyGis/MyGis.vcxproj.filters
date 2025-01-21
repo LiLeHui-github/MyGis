@@ -56,7 +56,7 @@
     <ClCompile Include="Source\TMS\TmsImageSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RWLock.cpp">
+    <ClCompile Include="Core\ReadWriteLocker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Rectangle.cpp">
@@ -108,7 +108,7 @@
     <ClInclude Include="Core\TileDefsHashFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RWLock.h">
+    <ClInclude Include="Core\ReadWriteLocker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\Rectangle.h">

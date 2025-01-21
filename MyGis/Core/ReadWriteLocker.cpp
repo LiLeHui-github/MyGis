@@ -1,9 +1,9 @@
-﻿#include "RWLock.h"
+﻿#include "ReadWriteLocker.h"
 
 namespace lh
 {
 
-void RWLock::readLock()
+void ReadWriteLocker::readLock()
 {
     std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -16,7 +16,7 @@ void RWLock::readLock()
     ++m_sharedWriteCount;
 }
 
-void RWLock::writeLock()
+void ReadWriteLocker::writeLock()
 {
     std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -29,7 +29,7 @@ void RWLock::writeLock()
     m_hasWrite = true;
 }
 
-void RWLock::readUnLock()
+void ReadWriteLocker::readUnLock()
 {
     std::unique_lock<std::mutex> lock(m_mutex);
     --m_sharedWriteCount;
@@ -39,7 +39,7 @@ void RWLock::readUnLock()
     }
 }
 
-void RWLock::writeUnLock()
+void ReadWriteLocker::writeUnLock()
 {
     std::unique_lock<std::mutex> lock(m_mutex);
     m_hasWrite = false;

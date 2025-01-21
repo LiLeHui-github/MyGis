@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MyGis/Core/RWLock.h"
+#include "Core/ReadWriteLocker.h"
 
 #include "MyGis/Core/MyGisDefs.h"
 #include "MyGis/Core/Rectangle.h"
@@ -26,8 +26,8 @@ private:
     void tileBatchLoadComplete();
 
 private:
-    RWLock m_rwLock;
-    QImage m_image;
+    ReadWriteLocker m_resultLock;
+    QImage m_resultImage;
 
     QPointF m_lastViewCenter;
     Rectangle m_lastMapExtent;

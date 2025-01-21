@@ -106,7 +106,7 @@
   <ItemGroup>
     <ClCompile Include="Core\Map.cpp" />
     <ClCompile Include="Core\Rectangle.cpp" />
-    <ClCompile Include="Core\RWLock.cpp" />
+    <ClCompile Include="Core\ReadWriteLocker.cpp" />
     <ClCompile Include="Core\Semaphore.cpp" />
     <ClCompile Include="Core\ThreadPool.cpp" />
     <ClCompile Include="Layer\ImageLayer.cpp" />
@@ -126,7 +126,7 @@
     <ClInclude Include="Core\MapSettings.h" />
     <ClInclude Include="Core\MyGisDefs.h" />
     <ClInclude Include="Core\Rectangle.h" />
-    <ClInclude Include="Core\RWLock.h" />
+    <ClInclude Include="Core\ReadWriteLocker.h" />
     <ClInclude Include="Core\Semaphore.h" />
     <ClInclude Include="Core\ThreadPool.h" />
     <ClInclude Include="Core\TileDefsHashFunctions.h" />

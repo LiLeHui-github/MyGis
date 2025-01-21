@@ -39,13 +39,13 @@ void TmsImageLayer::cancelRender()
 
 QImage TmsImageLayer::getImage()
 {
-    ReadGuard lock(m_rwLock);
-    return m_image;
+    ReadGuard lock(m_resultLock);
+    return m_resultImage;
 }
 
 void TmsImageLayer::tileLoadeComplate(const TileId& id, const QImage& image)
 {
-  
+
 }
 
 void TmsImageLayer::tileBatchLoadComplete()

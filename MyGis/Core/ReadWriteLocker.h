@@ -6,7 +6,7 @@
 namespace lh
 {
 
-class RWLock
+class ReadWriteLocker
 {
 public:
     // 读锁, 读取共享, 有写锁阻塞等待解锁
@@ -31,7 +31,7 @@ private:
 class ReadGuard
 {
 public:
-    explicit ReadGuard(RWLock& lock)
+    explicit ReadGuard(ReadWriteLocker& lock)
         : m_lock(lock)
     {
         m_lock.readLock();
@@ -46,13 +46,13 @@ public:
     ReadGuard& operator=(const ReadGuard&) = delete;
 
 private:
-    RWLock& m_lock;
+    ReadWriteLocker& m_lock;
 };
 
 class WriteGuard
 {
 public:
-    explicit WriteGuard(RWLock& lock)
+    explicit WriteGuard(ReadWriteLocker& lock)
         : m_lock(lock)
     {
         m_lock.writeLock();
@@ -67,7 +67,7 @@ public:
     WriteGuard& operator=(const WriteGuard&) = delete;
 
 private:
-    RWLock& m_lock;
+    ReadWriteLocker& m_lock;
 };
 
 }

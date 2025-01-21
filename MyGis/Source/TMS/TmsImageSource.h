@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#include "MyGis/Core/RWLock.h"
+#include "MyGis/Core/ReadWriteLocker.h"
 #include "MyGis/Core/TileDefsHashFunctions.h"
 #include "MyGis/Source/ImageSource.h"
 
@@ -51,7 +51,7 @@ private:
 private:
     QString m_url;
 
-    RWLock m_rwlock;
+    ReadWriteLocker m_rwlock;
 
     Rectangle m_worldExtent;
 
