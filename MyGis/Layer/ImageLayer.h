@@ -19,8 +19,10 @@ public:
     ~ImageLayer() override = default;
 
     virtual LayerId layerId() const = 0;
+
     virtual void startRender(const MapSettings& settings) = 0;
     virtual void cancelRender() {}
+
     virtual QImage getImage() = 0;
 
     void setImageSource(ImageSource* source) { m_source = source; }
@@ -32,16 +34,8 @@ Q_SIGNALS:
     void imageUpdate();
 
 protected:
-    void notifyLayerChanged()
-    {
-        Q_EMIT layerChanged();
-    }
-
-    void notifyImageUpdate()
-    {
-        Q_EMIT imageUpdate();
-    }
-
+    inline void notifyLayerChanged() { Q_EMIT layerChanged(); }
+    inline void notifyImageUpdate() { Q_EMIT imageUpdate(); }
 
 private:
     ImageSource* m_source = nullptr;

@@ -28,6 +28,8 @@ void Map::addLayer(ImageLayer* layer)
     connect(layer, &ImageLayer::imageUpdate, this, &Map::OnImageUpdate);
 
     m_layers[layer->layerId()].reset(layer);
+
+    Q_EMIT layerAdded(layer);
 }
 
 void Map::removeLayer(const LayerId& id)
@@ -39,6 +41,8 @@ void Map::removeLayer(const LayerId& id)
         disconnect(it->second.get(), nullptr, this, nullptr);
         m_layers.erase(it);
     }
+
+    Q_EMIT layerRemoved(id);
 }
 
 ImageLayer* Map::getLayer(const LayerId& id) const

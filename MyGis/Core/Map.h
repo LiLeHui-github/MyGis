@@ -35,6 +35,8 @@ public:
     void getAllLayer(std::vector<ImageLayer*>& layers) const;
 
 Q_SIGNALS:
+    void layerAdded(ImageLayer* layer);
+    void layerRemoved(const LayerId& layerId);
     void layerChanged(ImageLayer* layer);
     void imageUpdate(ImageLayer* layer);
 

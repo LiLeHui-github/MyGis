@@ -21,6 +21,8 @@ MapItemMap::MapItemMap(Map* map, QGraphicsScene* scene, QGraphicsItem* parent)
 {
     scene->addItem(this);
 
+    connect(map, &Map::layerAdded, this, &MapItemMap::OnLayerAdded);
+    connect(map, &Map::layerRemoved, this, &MapItemMap::OnLayerRemoved);
     connect(map, &Map::layerChanged, this, &MapItemMap::OnLayerChanged);
     connect(map, &Map::imageUpdate, this, &MapItemMap::OnImageUpdate);
 }
@@ -42,18 +44,22 @@ QRectF MapItemMap::boundingRect() const
     return QRectF{ QPointF{0, 0}, m_itemSize };
 }
 
-void MapItemMap::startRender(const MapSettings& settings)
+void MapItemMap::startRenderBySettings(const MapSettings& settings)
+{
+    m_renderSettings = std::make_shared<MapSettings>(settings);
+    startRender();
+}
+
+void MapItemMap::startRender()
 {
     std::vector<ImageLayer*> layers;
     m_map->getAllLayer(layers);
 
-    auto renderSettings = std::make_shared<MapSettings>(settings);
-
-    for(ImageLayer* layer : layers)
+    for (ImageLayer* layer : layers)
     {
-        ThreadPool::globalInstance()->submit([layer, renderSettings]()
+        ThreadPool::globalInstance()->submit([layer, this]()
         {
-            layer->startRender(*renderSettings);
+            layer->startRender(*m_renderSettings);
         });
     }
 }
@@ -83,6 +89,16 @@ void MapItemMap::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 
 }
 
+void MapItemMap::OnLayerAdded(ImageLayer* layer)
+{
+    refreshMap();
+}
+
+void MapItemMap::OnLayerRemoved(const LayerId& layerId)
+{
+    refreshMap();
+}
+
 void MapItemMap::OnLayerChanged(ImageLayer* layer)
 {
     update();
@@ -91,6 +107,12 @@ void MapItemMap::OnLayerChanged(ImageLayer* layer)
 void MapItemMap::OnImageUpdate(ImageLayer* layer)
 {
     update();
+}
+
+void MapItemMap::refreshMap()
+{
+    stopRender();
+    startRender();
 }
 
 }

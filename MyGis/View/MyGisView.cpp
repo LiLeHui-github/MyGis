@@ -59,7 +59,6 @@ MyGisView::MyGisView(Map* map, QWidget* parent)
 
     initResolution(0, 21);
     setViewExtent(sceneRect());
-    //setMapViewpointForProjection(QPointF{ 13526041.708072895 , 3664472.687460804 });
     setMapViewpointForProjection(QPointF{ 0 , 0 });
 }
 
@@ -126,7 +125,6 @@ QPointF MyGisView::getMapViewpoint() const
 
 void MyGisView::refresh()
 {
-    //spdlog::info("refresh() called.");
     m_refreshMapTimer->start(1);
 }
 
@@ -305,7 +303,7 @@ void MyGisView::updateProjectionMatrix()
 void MyGisView::refreshMap()
 {
     m_mapItem->stopRender();
-    m_mapItem->startRender(m_settings);
+    m_mapItem->startRenderBySettings(m_settings);
 }
 
 }
