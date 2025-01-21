@@ -1,5 +1,8 @@
 ﻿#include "RWLock.h"
 
+namespace lh
+{
+
 void RWLock::readLock()
 {
     std::unique_lock<std::mutex> lock(m_mutex);
@@ -41,4 +44,6 @@ void RWLock::writeUnLock()
     std::unique_lock<std::mutex> lock(m_mutex);
     m_hasWrite = false;
     m_cv.notify_all();
+}
+
 }

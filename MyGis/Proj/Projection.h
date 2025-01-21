@@ -4,6 +4,9 @@
 
 #include "MyGis/Core/MapSettings.h"
 
+namespace lh
+{
+
 // 投影接口类, 用于将像素坐标转换到投影坐标
 class Projection
 {
@@ -11,7 +14,7 @@ public:
     virtual ~Projection() = default;
 
     // 获取投影范围
-    virtual RectangleExtent getExtent() const = 0;
+    virtual Rectangle getExtent() const = 0;
 
     // 更新变换矩阵
     virtual void updateMatrix(const MapSettings& settings) {}
@@ -34,3 +37,5 @@ public:
         return toPixel(projection.x(), projection.y());
     }
 };
+
+}

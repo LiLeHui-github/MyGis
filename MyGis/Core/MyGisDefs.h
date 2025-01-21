@@ -5,6 +5,9 @@
 #include <QtCore/QString>
 #include <QtGui/QImage>
 
+namespace lh
+{
+
 // 图层Id
 using LayerId = QString;
 
@@ -41,3 +44,5 @@ struct TileId
 // 定义回调函数类型
 using TileCallback = std::function<void(const TileId& id, const QImage& image)>;
 using BatchCompleteCallback = std::function<void()>;
+
+}

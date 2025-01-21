@@ -5,6 +5,10 @@
 #include <QtWidgets/QGraphicsItem>
 
 class QGraphicsScene;
+
+namespace lh
+{
+
 class Map;
 class MapSettings;
 class ImageLayer;
@@ -34,3 +38,4 @@ private:
     Map* m_map;
 };
 
+}

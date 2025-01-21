@@ -3,6 +3,9 @@
 #include <mutex>
 #include <condition_variable>
 
+namespace lh
+{
+
 class RWLock
 {
 public:
@@ -66,3 +69,5 @@ public:
 private:
     RWLock& m_lock;
 };
+
+}

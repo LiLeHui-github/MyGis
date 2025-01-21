@@ -8,6 +8,10 @@
 #include "MyGis/Core/MapSettings.h"
 
 class QTimer;
+
+namespace lh
+{
+
 class Map;
 class MapItemMap;
 class Projection;
@@ -97,3 +101,5 @@ private:
     QPointF m_dragPos;
 
 };
+
+}

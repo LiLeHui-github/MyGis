@@ -3,15 +3,18 @@
 #include <QtCore/QPointF>
 #include <QtCore/QSizeF>
 
-class RectangleExtent
+namespace lh
+{
+
+class Rectangle
 {
 public:
-    RectangleExtent()
+    Rectangle()
         : xMin(0), xMax(0), yMin(0), yMax(0)
     {
     }
 
-    RectangleExtent(double _xmin, double _xmax, double _ymin, double _ymax)
+    Rectangle(double _xmin, double _xmax, double _ymin, double _ymax)
         : xMin(_xmin), xMax(_xmax), yMin(_ymin), yMax(_ymax)
     {
     }
@@ -46,3 +49,5 @@ public:
     double yMin;
     double yMax;
 };
+
+}

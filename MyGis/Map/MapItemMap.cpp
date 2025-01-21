@@ -12,6 +12,9 @@
 #include "MyGis/Core/MapSettings.h"
 #include "MyGis/Core/ThreadPool.h"
 
+namespace lh
+{
+
 MapItemMap::MapItemMap(Map* map, QGraphicsScene* scene, QGraphicsItem* parent)
     : QGraphicsItem(parent)
     , m_map(map)
@@ -68,8 +71,7 @@ void MapItemMap::stopRender()
 
 void MapItemMap::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
-    //painter->setClipRect(option->exposedRect);
+    painter->setRenderHints(QPainter::Antialiasing);
 
     std::vector<ImageLayer*> layers;
     m_map->getAllLayer(layers);
@@ -89,4 +91,6 @@ void MapItemMap::OnLayerChanged(ImageLayer* layer)
 void MapItemMap::OnImageUpdate(ImageLayer* layer)
 {
     update();
+}
+
 }

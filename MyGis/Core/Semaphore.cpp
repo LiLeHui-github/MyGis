@@ -1,5 +1,8 @@
 ﻿#include "Semaphore.h"
 
+namespace lh
+{
+
 Semaphore::Semaphore(int n)
     : m_number(n)
 {
@@ -24,4 +27,6 @@ void Semaphore::acquire(int n)
         m_cv.wait(lock);
     }
     m_number -= n;
+}
+
 }

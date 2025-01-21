@@ -1,17 +1,20 @@
 ﻿#include "MercatorProjection.h"
 
+namespace lh
+{
+
 MercatorProjection::MercatorProjection()
 {
     //x -20037508.3427892,20037508.3427892
     //y -20037508.3427892,20037508.3427892
-    m_extent = RectangleExtent(-20037508.342789244, 20037508.342789244, -20037508.342789244, 20037508.342789244);
+    m_extent = Rectangle(-20037508.342789244, 20037508.342789244, -20037508.342789244, 20037508.342789244);
 }
 
 MercatorProjection::~MercatorProjection()
 {
 }
 
-RectangleExtent MercatorProjection::getExtent() const
+Rectangle MercatorProjection::getExtent() const
 {
     return m_extent;
 }
@@ -66,4 +69,6 @@ QPointF MercatorProjection::toPixel(double x, double y) const
     m_projection_to_pixel_matrix.map(x, y, &rx, &ry);
 
     return QPointF{ rx, ry };
+}
+
 }

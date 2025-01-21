@@ -4,6 +4,9 @@
 
 #include "MyGis/Layer/ImageLayer.h"
 
+namespace lh
+{
+
 Map::Map()
 {
 }
@@ -68,4 +71,6 @@ void Map::OnLayerChanged()
 void Map::OnImageUpdate()
 {
     Q_EMIT imageUpdate(qobject_cast<ImageLayer*>(sender()));
+}
+
 }

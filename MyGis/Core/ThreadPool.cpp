@@ -1,5 +1,8 @@
 ﻿#include "ThreadPool.h"
 
+namespace lh
+{
+
 ThreadPool* ThreadPool::globalInstance()
 {
     m_globalMutex.lock();
@@ -95,3 +98,5 @@ void ThreadPool::workThread()
 
 std::mutex ThreadPool::m_globalMutex;
 ThreadPool* ThreadPool::m_globalInstance = nullptr;
+
+}

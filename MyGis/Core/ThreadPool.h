@@ -10,6 +10,9 @@
 
 #include "MyGis/Core/Semaphore.h"
 
+namespace lh
+{
+
 class ThreadPool
 {
 public:
@@ -61,3 +64,5 @@ private:
     static std::mutex m_globalMutex;
     static ThreadPool* m_globalInstance;
 };
+
+}

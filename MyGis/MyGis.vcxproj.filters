@@ -26,9 +26,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\MyGisWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="View\MyGisView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -62,14 +59,11 @@
     <ClCompile Include="Core\RWLock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RectangleExtent.cpp">
+    <ClCompile Include="Core\Rectangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Widgets\MyGisWidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="View\MyGisView.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -82,11 +76,6 @@
     <QtMoc Include="Core\Map.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="Widgets\MyGisWidget.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\MapSettings.h">
@@ -122,7 +111,7 @@
     <ClInclude Include="Core\RWLock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RectangleExtent.h">
+    <ClInclude Include="Core\Rectangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

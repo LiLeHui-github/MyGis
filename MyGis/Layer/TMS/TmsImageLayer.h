@@ -3,8 +3,11 @@
 #include "MyGis/Core/RWLock.h"
 
 #include "MyGis/Core/MyGisDefs.h"
-#include "MyGis/Core/RectangleExtent.h"
+#include "MyGis/Core/Rectangle.h"
 #include "MyGis/Layer/ImageLayer.h"
+
+namespace lh
+{
 
 class TmsImageLayer : public ImageLayer
 {
@@ -27,8 +30,10 @@ private:
     QImage m_image;
 
     QPointF m_lastViewCenter;
-    RectangleExtent m_lastMapExtent;
+    Rectangle m_lastMapExtent;
     double m_lastResolution;
 
 };
+
+}
 

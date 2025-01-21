@@ -12,6 +12,9 @@
 #include "MyGis/Map/MapItemMap.h" 
 #include "MyGis/Proj/MercatorProjection.h"
 
+namespace lh
+{
+
 template <typename T>
 T clamp(T val, T min, T max)
 {
@@ -303,4 +306,6 @@ void MyGisView::refreshMap()
 {
     m_mapItem->stopRender();
     m_mapItem->startRender(m_settings);
+}
+
 }

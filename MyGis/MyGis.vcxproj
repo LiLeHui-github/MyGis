@@ -105,7 +105,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\Map.cpp" />
-    <ClCompile Include="Core\RectangleExtent.cpp" />
+    <ClCompile Include="Core\Rectangle.cpp" />
     <ClCompile Include="Core\RWLock.cpp" />
     <ClCompile Include="Core\Semaphore.cpp" />
     <ClCompile Include="Core\ThreadPool.cpp" />
@@ -117,13 +117,6 @@
     <ClCompile Include="Proj\MercatorProjection.cpp" />
     <ClCompile Include="Source\TMS\TmsImageSource.cpp" />
     <ClCompile Include="View\MyGisView.cpp" />
-    <ClCompile Include="Widgets\MyGisWidget.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="Widgets\MyGisWidget.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="Widgets\MyGisWidget.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="View\MyGisView.h" />
@@ -132,7 +125,7 @@
     <QtMoc Include="Core\Map.h" />
     <ClInclude Include="Core\MapSettings.h" />
     <ClInclude Include="Core\MyGisDefs.h" />
-    <ClInclude Include="Core\RectangleExtent.h" />
+    <ClInclude Include="Core\Rectangle.h" />
     <ClInclude Include="Core\RWLock.h" />
     <ClInclude Include="Core\Semaphore.h" />
     <ClInclude Include="Core\ThreadPool.h" />

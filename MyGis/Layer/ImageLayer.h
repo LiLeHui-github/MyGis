@@ -6,6 +6,9 @@
 #include "MyGis/Core/MapSettings.h"
 #include "MyGis/Core/MyGisDefs.h"
 
+namespace lh
+{
+
 class ImageSource;
 
 class ImageLayer : public QObject
@@ -44,3 +47,5 @@ private:
     ImageSource* m_source = nullptr;
 
 };
+
+}

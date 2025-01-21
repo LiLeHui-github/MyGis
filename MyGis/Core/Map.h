@@ -9,8 +9,12 @@
 
 #include "MyGisDefs.h"
 
-class ImageLayer;
 
+namespace lh
+{
+
+class ImageLayer;
+    
 class Map : public QObject
 {
     Q_OBJECT
@@ -42,3 +46,5 @@ private:
     std::unordered_map<QString, std::unique_ptr<ImageLayer>> m_layers;
 
 };
+
+}

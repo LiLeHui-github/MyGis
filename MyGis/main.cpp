@@ -8,9 +8,9 @@ int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
 
-    MyGisView w;
+    lh::MyGisView w;
     w.show();
-    w.getMap()->addLayer(new TmsImageLayer("E:/BaiduNetdiskDownload/BingMapTiles/%1/%2/%3.png"));
+    w.getMap()->addLayer(new lh::TmsImageLayer("E:/BaiduNetdiskDownload/BingMapTiles/%1/%2/%3.png"));
 
 
     return a.exec();

@@ -3,6 +3,9 @@
 #include <mutex>
 #include <condition_variable>
 
+namespace lh
+{
+
 class Semaphore
 {
 public:
@@ -17,3 +20,5 @@ private:
     std::condition_variable m_cv;
     int m_number;
 };
+
+}
