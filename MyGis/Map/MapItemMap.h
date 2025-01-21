@@ -25,6 +25,8 @@ public:
     void setItemSize(const QSizeF& size);
     QRectF boundingRect() const override;
 
+    void setRenderSettings(const MapSettings& settings);
+
     void startRenderBySettings(const MapSettings& settings);
 
     void startRender();

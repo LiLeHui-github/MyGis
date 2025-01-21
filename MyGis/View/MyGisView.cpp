@@ -60,6 +60,8 @@ MyGisView::MyGisView(Map* map, QWidget* parent)
     initResolution(0, 21);
     setViewExtent(sceneRect());
     setMapViewpointForProjection(QPointF{ 0 , 0 });
+
+    m_mapItem->setRenderSettings(m_settings);   //设置初始配置
 }
 
 MyGisView::~MyGisView()

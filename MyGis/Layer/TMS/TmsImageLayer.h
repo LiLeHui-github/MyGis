@@ -22,12 +22,15 @@ protected:
     QImage getImage() override;
 
 private:
-    void tileLoadeComplate(const TileId& id, const QImage& image);
+    void tileLoadeComplete(const TileId& id, const QImage& image);
     void tileBatchLoadComplete();
 
 private:
-    ReadWriteLocker m_resultLock;
-    QImage m_resultImage;
+    ReadWriteLocker m_canvasLock;
+    QImage m_canvas;
+
+    ReadWriteLocker m_tempCanvasLock;
+    QImage m_tempCanvas;
 
     QPointF m_lastViewCenter;
     Rectangle m_lastMapExtent;

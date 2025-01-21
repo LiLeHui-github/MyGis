@@ -44,9 +44,14 @@ QRectF MapItemMap::boundingRect() const
     return QRectF{ QPointF{0, 0}, m_itemSize };
 }
 
-void MapItemMap::startRenderBySettings(const MapSettings& settings)
+void MapItemMap::setRenderSettings(const MapSettings& settings)
 {
     m_renderSettings = std::make_shared<MapSettings>(settings);
+}
+
+void MapItemMap::startRenderBySettings(const MapSettings& settings)
+{
+    setRenderSettings(settings);
     startRender();
 }
 

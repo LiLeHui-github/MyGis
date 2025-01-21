@@ -24,6 +24,17 @@ void TmsImageSource::requestTiles(const MapSettings& settings,
     const TileLoadCallback& tileLoadCallback,
     const TileBatchLoadCompleteCallback& tileBatchLoadComplete)
 {
+    m_worldExtent = settings.m_proj->getExtent();
+    const Rectangle& mapExtent = settings.getMapExtent();
+
+    int zoom = settings.m_zoom;
+    double scale = settings.m_resolution / (m_worldExtent.width() / (256.0 * std::pow(2, zoom)));
+    double unitTileWidth = 256.0 * settings.m_resolution * scale;
+
+    TileRange range;
+    calcTileRange(1.0 / unitTileWidth, mapExtent, range);
+
+
 }
 
 void TmsImageSource::cancelRequest()
