@@ -22,8 +22,8 @@ protected:
     QImage getImage() override;
 
 private:
-    void tileResponse(const TileId& id, const QImage& image);
-    void tileBatchComplete();
+    void tileLoadeComplate(const TileId& id, const QImage& image);
+    void tileBatchLoadComplete();
 
 private:
     RWLock m_rwLock;

@@ -30,15 +30,15 @@ public:
 
     void requestTiles(const MapSettings& settings,
         const Rectangle& lastMapExtent, 
-        const TileCallback& OnTileLoaded, 
-        const BatchCompleteCallback& OnBatchComplete) override;
+        const TileLoadCallback& tileLoadCallback,
+        const TileBatchLoadCompleteCallback& tileBatchLoadComplete) override;
 
     void cancelRequest() override;
 
 private:
     void calcTileRange(double invertUnitTile, const Rectangle& mapExtent, TileRange& range) const;
 
-    void asyncRequest(const TileId& id, const TileCallback& OnTileLoaded);
+    void asyncRequest(const TileId& id, const TileLoadCallback& tileLoadCallback);
 
     bool findBlack(const TileId& id);
 

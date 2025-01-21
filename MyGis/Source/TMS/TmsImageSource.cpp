@@ -19,7 +19,10 @@ TmsImageSource::~TmsImageSource()
 {
 }
 
-void TmsImageSource::requestTiles(const MapSettings& settings, const Rectangle& lastMapExtent, const TileCallback& OnTileLoaded, const BatchCompleteCallback& OnBatchComplete)
+void TmsImageSource::requestTiles(const MapSettings& settings,
+    const Rectangle& lastMapExtent,
+    const TileLoadCallback& tileLoadCallback,
+    const TileBatchLoadCompleteCallback& tileBatchLoadComplete)
 {
 }
 
@@ -49,7 +52,7 @@ void TmsImageSource::calcTileRange(double invertUnitTile,
     range.yMax = static_cast<int>(std::floor(yMax));
 }
 
-void TmsImageSource::asyncRequest(const TileId& id, const TileCallback& OnTileLoaded)
+void TmsImageSource::asyncRequest(const TileId& id, const TileLoadCallback& tileLoadCallback)
 {
 }
 

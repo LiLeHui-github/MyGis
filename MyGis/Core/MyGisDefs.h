@@ -42,7 +42,7 @@ struct TileId
 };
 
 // 定义回调函数类型
-using TileCallback = std::function<void(const TileId& id, const QImage& image)>;
-using BatchCompleteCallback = std::function<void()>;
+using TileLoadCallback = std::function<void(const TileId& id, const QImage& image)>;
+using TileBatchLoadCompleteCallback = std::function<void()>;
 
 }

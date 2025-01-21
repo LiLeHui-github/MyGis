@@ -43,12 +43,12 @@ QImage TmsImageLayer::getImage()
     return m_image;
 }
 
-void TmsImageLayer::tileResponse(const TileId& id, const QImage& image)
+void TmsImageLayer::tileLoadeComplate(const TileId& id, const QImage& image)
 {
   
 }
 
-void TmsImageLayer::tileBatchComplete()
+void TmsImageLayer::tileBatchLoadComplete()
 {
 }
 
