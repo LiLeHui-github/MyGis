@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/ReadWriteLocker.h"
+#include "MyGis/Core/ReadWriteLocker.h"
 
 #include "MyGis/Core/MyGisDefs.h"
 #include "MyGis/Core/Rectangle.h"

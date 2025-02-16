@@ -2,7 +2,19 @@
 
 #include <type_traits>
 
+#include <QtCore/QString>
+#include <QtCore/QHashFunctions>
+
 #include "MyGis/Core/MyGisDefs.h"
+
+template<>
+struct std::hash<QString>
+{
+    std::size_t operator() (const QString& str) const noexcept
+    {
+        return qHash(str);
+    }
+};
 
 template<>
 struct std::hash<lh::TileId>

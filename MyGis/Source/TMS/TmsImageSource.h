@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 #include "MyGis/Core/ReadWriteLocker.h"
-#include "MyGis/Core/TileDefsHashFunctions.h"
+#include "MyGis/Core/HashFunction.hpp"
 #include "MyGis/Source/ImageSource.h"
 
 namespace lh

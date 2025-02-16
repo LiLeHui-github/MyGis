@@ -8,7 +8,7 @@
 
 #include "MyGis/Core/Map.h"
 
-#include "Layer/ImageLayer.h"
+#include "MyGis/Layer/ImageLayer.h"
 #include "MyGis/Core/MapSettings.h"
 #include "MyGis/Core/ThreadPool.h"
 

@@ -5,10 +5,9 @@
 #include <unordered_map>
 
 #include <QtCore/QObject>
-#include <QtCore/QHashFunctions>
 
-#include "MyGisDefs.h"
-
+#include "MyGis/Core/HashFunction.hpp"
+#include "MyGis/Core/MyGisDefs.h"
 
 namespace lh
 {

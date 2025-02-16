@@ -1,10 +1,12 @@
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QObject>
 #include <QtCore/QSizeF>
 #include <QtWidgets/QGraphicsItem>
 
-#include "Core/MyGisDefs.h"
+#include "MyGis/Core/MyGisDefs.h"
 
 class QGraphicsScene;
 
