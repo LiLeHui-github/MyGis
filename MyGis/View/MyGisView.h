@@ -81,8 +81,6 @@ private:
         
     void updateProjectionMatrix();
 
-    void refreshMap();
-
 private:
     int m_minZoom;
     int m_maxZoom;
@@ -93,8 +91,6 @@ private:
     std::unique_ptr<MapItemMap> m_mapItem;
     std::unique_ptr<Projection> m_proj;
     MapSettings m_settings;
-
-    QTimer* m_refreshMapTimer;
 
     // 移动处理
     bool m_dragMap;

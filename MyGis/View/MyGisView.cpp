@@ -53,15 +53,11 @@ MyGisView::MyGisView(Map* map, QWidget* parent)
 
     m_settings.m_proj = m_proj.get();
 
-    m_refreshMapTimer = new QTimer(this);
-    m_refreshMapTimer->setSingleShot(true);
-    connect(m_refreshMapTimer, &QTimer::timeout, this, &MyGisView::refreshMap);
+    m_mapItem->setRenderSettings(m_settings);   //设置初始配置
 
     initResolution(0, 21);
     setViewExtent(sceneRect());
     setMapViewpointForProjection(QPointF{ 0 , 0 });
-
-    m_mapItem->setRenderSettings(m_settings);   //设置初始配置
 }
 
 MyGisView::~MyGisView()
@@ -127,7 +123,8 @@ QPointF MyGisView::getMapViewpoint() const
 
 void MyGisView::refresh()
 {
-    m_refreshMapTimer->start(1);
+    m_mapItem->stopRender();
+    m_mapItem->startRenderBySettings(m_settings);
 }
 
 void MyGisView::mousePressEvent(QMouseEvent* event)
@@ -300,12 +297,6 @@ void MyGisView::zoomOut()
 void MyGisView::updateProjectionMatrix()
 {
     m_proj->updateMatrix(m_settings);
-}
-
-void MyGisView::refreshMap()
-{
-    m_mapItem->stopRender();
-    m_mapItem->startRenderBySettings(m_settings);
 }
 
 }
